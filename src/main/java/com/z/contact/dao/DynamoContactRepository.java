@@ -44,7 +44,7 @@ public class DynamoContactRepository implements ContactRepository {
     public Contact findById(String id) {
         GetItemRequest request = GetItemRequest.builder()
                 .key(Map.of(
-                        "id", AttributeValue.builder().s(id).build()
+                    "id", AttributeValue.builder().s(id).build()
                 ))
                 .tableName(TABLE_NAME)
                 .build();

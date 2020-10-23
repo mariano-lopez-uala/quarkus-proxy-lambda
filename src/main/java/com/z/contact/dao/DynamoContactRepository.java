@@ -4,7 +4,6 @@ import com.z.contact.dao.exception.DynamoTableNotFound;
 import com.z.contact.domain.Contact;
 import com.z.contact.domain.Status;
 import com.z.contact.environment.DynamoEnvironment;
-import com.z.contact.utils.EnvironmentUtils;
 import lombok.extern.slf4j.Slf4j;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
@@ -14,6 +13,7 @@ import software.amazon.awssdk.services.dynamodb.model.PutItemRequest;
 
 import javax.enterprise.context.ApplicationScoped;
 import java.util.Map;
+import java.util.Optional;
 
 @ApplicationScoped
 @Slf4j
@@ -64,8 +64,7 @@ public class DynamoContactRepository implements ContactRepository {
     }
 
     private String getTableFromEnv() throws DynamoTableNotFound {
-        return EnvironmentUtils
-                .getEnvironmentVariable(DynamoEnvironment.DYNAMO_TABLE_NAME.name())
+        return Optional.ofNullable(System.getenv(DynamoEnvironment.DYNAMO_TABLE_NAME.name()))
                 .orElseThrow(DynamoTableNotFound::new);
     }
 }

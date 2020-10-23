@@ -1,5 +1,6 @@
 package com.z.contact.domain;
 
 public enum Status {
-    CREATED
+    CREATED,
+    PROCESSED
 }

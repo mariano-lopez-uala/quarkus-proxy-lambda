@@ -6,10 +6,13 @@ import com.z.contact.dto.AddContactRequest;
 
 import javax.enterprise.context.ApplicationScoped;
 import java.util.UUID;
+import java.util.function.Function;
 
 @ApplicationScoped
-public class AddContactRequestTransformer {
-    public Contact buildContact(AddContactRequest addContactRequest) {
+public class AddContactRequestTransformer implements Function<AddContactRequest, Contact> {
+
+    @Override
+    public Contact apply(AddContactRequest addContactRequest) {
         return Contact.builder()
                 .id(UUID.randomUUID().toString())
                 .firstName(addContactRequest.getFirstName())

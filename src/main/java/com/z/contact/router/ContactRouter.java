@@ -1,12 +1,9 @@
 package com.z.contact.router;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.z.contact.dao.ContactRepository;
-import com.z.contact.domain.Contact;
 import com.z.contact.dto.AddContactRequest;
 import com.z.contact.dto.ContactResponse;
-import com.z.contact.transformer.AddContactRequestTransformer;
-import com.z.contact.transformer.ContactResponseTransformer;
+import com.z.contact.service.ContactService;
 import io.quarkus.vertx.web.Body;
 import io.quarkus.vertx.web.Param;
 import io.quarkus.vertx.web.Route;
@@ -27,40 +24,41 @@ import static io.vertx.core.http.HttpMethod.POST;
 @ApplicationScoped
 @Slf4j
 public class ContactRouter {
-    private final AddContactRequestTransformer addContactRequestTransformer;
-    private final ContactResponseTransformer contactResponseTransformer;
-    private final ContactRepository contactRepository;
+    private final String BASE_PATH = "/proxyzTest";
+    private final String JSON_MEDIA_TYPE = "application/json";
+    private final ContactService contactService;
     private final ObjectMapper objectMapper;
 
-    public ContactRouter(AddContactRequestTransformer addContactRequestTransformer,
-                         ContactResponseTransformer contactResponseTransformer,
-                         ContactRepository contactRepository,
+    public ContactRouter(ContactService contactService,
                          ObjectMapper objectMapper) {
-        this.addContactRequestTransformer = addContactRequestTransformer;
-        this.contactResponseTransformer = contactResponseTransformer;
-        this.contactRepository = contactRepository;
+        this.contactService = contactService;
         this.objectMapper = objectMapper;
     }
 
-    @Route(methods = POST, path = "/proxyzTest", produces = "application/json", consumes = "application/json")
-    @SneakyThrows(IOException.class)
+    @Route(methods = POST, path = BASE_PATH, produces = JSON_MEDIA_TYPE, consumes = JSON_MEDIA_TYPE)
     void add(RoutingContext context, @Body AddContactRequest request) {
-            log.info("Add contact request: {}", request);
-            Contact contact = addContactRequestTransformer.apply(request);
-            contactRepository.put(contact);
-            ContactResponse response = contactResponseTransformer.apply(contact);
-            context.response().setStatusCode(HttpStatusCode.CREATED);
-            context.response().end(Buffer.buffer(objectMapper.writeValueAsBytes(response)));
+        ContactResponse response = this.contactService.add(request);
+        context.response().setStatusCode(HttpStatusCode.CREATED);
+        context.response().end(this.toBuffer(response));
     }
 
-    @Route(methods = GET, path = "/proxyzTest/:accountId", produces = "application/json")
+    @Route(methods = GET, path = BASE_PATH + "/:contactId", produces = JSON_MEDIA_TYPE)
+    void findById(RoutingContext context, @Param("contactId") String contactId) {
+        this.contactService
+                .findById(contactId)
+                .ifPresentOrElse(contactResponse -> {
+                    context.response().setStatusCode(HttpStatusCode.OK);
+                    context.response().end(this.toBuffer(contactResponse));
+                }, () -> {
+                    context.response().setStatusCode(HttpStatusCode.NO_CONTENT);
+                    context.response().end();
+                });
+
+    }
+
     @SneakyThrows(IOException.class)
-    void findById(RoutingContext context, @Param("accountId") String accountId) {
-        log.info("FindById: {}", accountId);
-        Contact contact = contactRepository.findById(accountId);
-        ContactResponse response = contactResponseTransformer.apply(contact);
-        context.response().setStatusCode(HttpStatusCode.OK);
-        context.response().end(Buffer.buffer(objectMapper.writeValueAsBytes(response)));
+    private Buffer toBuffer(Object obj) {
+        return Buffer.buffer(objectMapper.writeValueAsBytes(obj));
     }
 
 
@@ -75,7 +73,6 @@ public class ContactRouter {
         log.info("Headers: {}", context.request().headers());
         log.info("Path parameters: {}", context.request().params());
         log.info("Query parameters: {}", context.request().query());
-
         context.next();
     }
 }

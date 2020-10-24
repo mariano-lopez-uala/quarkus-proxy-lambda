@@ -2,7 +2,9 @@ package com.z.contact.dao;
 
 import com.z.contact.domain.Contact;
 
+import java.util.Optional;
+
 public interface ContactRepository {
     void put(Contact contact);
-    Contact findById(String id);
+    Optional<Contact> findById(String id);
 }

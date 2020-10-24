@@ -41,7 +41,7 @@ public class DynamoContactRepository implements ContactRepository {
     }
 
     @Override
-    public Contact findById(String id) {
+    public Optional<Contact> findById(String id) {
         GetItemRequest request = GetItemRequest.builder()
                 .key(Map.of(
                     "id", AttributeValue.builder().s(id).build()
@@ -49,15 +49,17 @@ public class DynamoContactRepository implements ContactRepository {
                 .tableName(TABLE_NAME)
                 .build();
         GetItemResponse response = this.dynamoDbClient.getItem(request);
-        Contact contact = null;
+        Optional<Contact> contact = Optional.empty();
         if (response.hasItem()) {
             log.info("Dynamo ItemResponse: {}", response.item());
-            contact = Contact.builder()
+            contact = Optional.of(
+                    Contact.builder()
                     .id(response.item().get("id").s())
                     .firstName(response.item().get("firstName").s())
                     .lastName(response.item().get("lastName").s())
                     .status(Status.valueOf(response.item().get("status").s()))
-                    .build();
+                    .build()
+            );
             log.info("Contact UnMarshaling: {}", contact);
         }
         return contact;

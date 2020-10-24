@@ -1,4 +1,4 @@
-package com.z.contact.environment;
+package com.z.contact.configuration.environment;
 
 public enum DynamoEnvironment {
     DYNAMO_TABLE_NAME

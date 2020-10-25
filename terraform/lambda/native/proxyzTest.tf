@@ -4,15 +4,15 @@ provider "aws" {
 }
 
 resource "aws_lambda_function" "proxyzTest" {
-	description                    = "Proxy-lambda"
+	description                    = "Proxy-lambda native"
 	function_name                  = "arn:aws:lambda:us-east-1:161142984839:function:proxyzTest"
 	handler                        = "io.quarkus.amazon.lambda.runtime.QuarkusStreamHandler::handleRequest"
 	memory_size                    = 512
 	reserved_concurrent_executions = -1
 	role                           = "arn:aws:iam::161142984839:role/service-role/proxyzTest-role-ykunx2j2"
-	runtime                        = "java11"
-	source_code_hash               = filebase64sha256("../../../target/lambda-proxy-1.0.0-SNAPSHOT-runner.jar")
-	filename	 				   = "../../../target/lambda-proxy-1.0.0-SNAPSHOT-runner.jar"
+	runtime                        = "provided.al2"
+	source_code_hash               = filebase64sha256("../../../target/function.zip")
+	filename	 				   = "../../../target/function.zip"
 	tags                           = {}
 	timeout                        = 10
 

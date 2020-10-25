@@ -1,6 +1,5 @@
 package com.z.contact;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.z.contact.dao.ContactRepository;
 import com.z.contact.domain.Contact;
@@ -22,7 +21,7 @@ import static org.mockito.Mockito.*;
 
 @QuarkusTest
 public class ContactRouterTest {
-    private final String BASE_PATH = "/proxyzTest";
+    private final String BASE_PATH          = "/proxyzTest";
 
     private final String CONTACT_ID         = "ce64840a-bc84-4184-b20d-c8a28b5bd812";
     private final String CONTACT_FIRST_NAME = "Mariano";
@@ -36,7 +35,7 @@ public class ContactRouterTest {
     ContactRepository mockContactRepository;
 
     @Test
-    public void shouldAddContactWhenPostProxy() throws JsonProcessingException {
+    public void shouldAddContactWithHttpPost() throws Exception {
         doNothing().when(mockContactRepository).put(any(Contact.class));
         RestAssured
                 .given()
@@ -55,7 +54,7 @@ public class ContactRouterTest {
     }
 
     @Test
-    public void shouldFindByIdWhenGetProxy() {
+    public void shouldFindByIdWithHttpGet() {
         when(mockContactRepository.findById(CONTACT_ID)).thenReturn(Optional.of(dummyContact()));
         RestAssured
                 .given()

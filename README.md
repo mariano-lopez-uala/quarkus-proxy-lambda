@@ -22,6 +22,10 @@ Be aware that it’s not an _über-jar_ as the dependencies are copied into the 
 
 If you want to build an _über-jar_, execute the following command:
 ```shell script
+./mvnw package -Dquarkus.profile=dev
+```
+or
+```shell script
 ./mvnw package -Dquarkus.package.type=uber-jar
 ```
 

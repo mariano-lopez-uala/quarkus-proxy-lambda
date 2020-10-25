@@ -12,5 +12,7 @@ import lombok.NoArgsConstructor;
 @Data
 @RegisterForReflection
 public class ContactResponse {
-    private String id, firstAndLastName, status;
+    private String id;
+    private String firstAndLastName;
+    private String status;
 }

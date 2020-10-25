@@ -1,0 +1,56 @@
+---
+openapi: 3.0.3
+info:
+  title: Contact example API
+  version: 1.0.0
+paths:
+  /proxyzTest:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddContactRequest'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContactResponse'
+  /proxyzTest/{contactId}:
+    get:
+      parameters:
+      - name: contactId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContactResponse'
+components:
+  schemas:
+    AddContactRequest:
+      type: object
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+    ContactResponse:
+      type: object
+      properties:
+        firstAndLastName:
+          type: string
+        id:
+          type: string
+        status:
+          type: string
+   type: string
+        status:
+          type: string

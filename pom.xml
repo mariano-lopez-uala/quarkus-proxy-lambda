@@ -57,8 +57,12 @@
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-amazon-lambda-http</artifactId>
     </dependency>
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-smallrye-openapi</artifactId>
+    </dependency>
 
-
+    <!-- TEST -->
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-junit5</artifactId>

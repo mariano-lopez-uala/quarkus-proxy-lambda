@@ -1,9 +1,9 @@
 package com.z.contact.dao;
 
+import com.z.contact.configuration.environment.DynamoEnvironment;
 import com.z.contact.dao.exception.DynamoTableNotFound;
 import com.z.contact.domain.Contact;
 import com.z.contact.domain.Status;
-import com.z.contact.configuration.environment.DynamoEnvironment;
 import lombok.extern.slf4j.Slf4j;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
@@ -27,7 +27,7 @@ public class DynamoContactRepository implements ContactRepository {
     }
 
     @Override
-    public void put(Contact contact) {
+    public void put(Contact contact)  {
         PutItemRequest itemRequest = PutItemRequest.builder()
                 .tableName(TABLE_NAME)
                 .item(Map.of(

@@ -1,7 +1,6 @@
 package com.z.contact.dao;
 
-import com.z.contact.configuration.environment.DynamoEnvironment;
-import com.z.contact.dao.exception.DynamoTableNotFound;
+import com.z.contact.configuration.DynamoConfiguration;
 import com.z.contact.domain.Contact;
 import com.z.contact.domain.Status;
 import lombok.extern.slf4j.Slf4j;
@@ -19,17 +18,17 @@ import java.util.Optional;
 @Slf4j
 public class DynamoContactRepository implements ContactRepository {
     private final DynamoDbClient dynamoDbClient;
-    private final String TABLE_NAME;
+    private final DynamoConfiguration dynamoConfiguration;
 
-    public DynamoContactRepository(DynamoDbClient dynamoDbClient) throws DynamoTableNotFound {
+    public DynamoContactRepository(DynamoDbClient dynamoDbClient, DynamoConfiguration dynamoConfiguration) {
         this.dynamoDbClient = dynamoDbClient;
-        this.TABLE_NAME = getTableFromEnv();
+        this.dynamoConfiguration = dynamoConfiguration;
     }
 
     @Override
     public void put(Contact contact)  {
         PutItemRequest itemRequest = PutItemRequest.builder()
-                .tableName(TABLE_NAME)
+                .tableName(this.dynamoConfiguration.tableName())
                 .item(Map.of(
                     "id", AttributeValue.builder().s(contact.getId()).build(),
                     "firstName", AttributeValue.builder().s(contact.getFirstName()).build(),
@@ -46,7 +45,7 @@ public class DynamoContactRepository implements ContactRepository {
                 .key(Map.of(
                     "id", AttributeValue.builder().s(id).build()
                 ))
-                .tableName(TABLE_NAME)
+                .tableName(this.dynamoConfiguration.tableName())
                 .build();
         GetItemResponse response = this.dynamoDbClient.getItem(request);
         Optional<Contact> contact = Optional.empty();
@@ -63,10 +62,5 @@ public class DynamoContactRepository implements ContactRepository {
             log.info("Contact UnMarshaling: {}", contact);
         }
         return contact;
-    }
-
-    private String getTableFromEnv() throws DynamoTableNotFound {
-        return Optional.ofNullable(System.getenv(DynamoEnvironment.DYNAMO_TABLE_NAME.name()))
-                .orElseThrow(DynamoTableNotFound::new);
     }
 }

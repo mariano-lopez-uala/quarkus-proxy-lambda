@@ -35,6 +35,7 @@ nb-configuration.xml
 *.rej
 
 # Local .terraform directories
+/terraform/*
 **/.terraform/*
 
 # .tfstate files

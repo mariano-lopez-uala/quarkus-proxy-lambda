@@ -47,6 +47,10 @@ You can then execute your native executable with: `./target/lambda-proxy-1.0.0-S
 
 If you want to learn more about building native executables, please consult https://quarkus.io/guides/maven-tooling.html.
 
-# Amazon Lambda Integration
-
-Guide: https://quarkus.io/guides/amazon-lambda
+# Terraform (TODO: policies)
+```shell script
+TF_LOG=DEBUG terraform import aws_lambda_function.proxyzTest arn:aws:lambda:us-east-1:161142984839:function:proxyzTest &&\
+TF_LOG=DEBUG terraform import aws_api_gateway_rest_api.ProxyzTest lds80zaxhd  &&\
+TF_LOG=DEBUG terraform import aws_dynamodb_table.ContactDynamo ContactMarianoLopez &&\
+TF_LOG=DEBUG terraform plan -out=dev.tfplan 
+```

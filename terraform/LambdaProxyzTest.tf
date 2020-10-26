@@ -11,8 +11,11 @@ resource "aws_lambda_function" "proxyzTest" {
 	reserved_concurrent_executions = -1
 	role                           = "arn:aws:iam::161142984839:role/service-role/proxyzTest-role-ykunx2j2"
 	runtime                        = "provided.al2"
-	source_code_hash               = filebase64sha256("../../../target/function.zip")
-	filename	 				   = "../../../target/function.zip"
+	source_code_hash               = filebase64sha256("../target/function.zip")
+	filename	 				   = "../target/function.zip"
+	/*runtime                        = "java11"
+	source_code_hash               = filebase64sha256("../target/lambda-proxy-1.0.0-SNAPSHOT-runner.jar")
+	filename	 				   = "../target/lambda-proxy-1.0.0-SNAPSHOT-runner.jar"*/
 	tags                           = {}
 	timeout                        = 10
 
